@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Subathon.io</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src="https://unpkg.com/twitch-js@>2.0.0-beta.31"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src='main.js'></script>
+</head>
+<body>
+    <div id="graphbox" style="height: 400px; min-width: 310px"></div>
+    <fieldset>
+        <legend>Count Down</legend>
+        <input id="hours" type="number" value="0" min="0">:
+        <input id="minutes" type="number" value="0" min="0" max="59">:
+        <input id="seconds" type="number" value="0" min="0" max="59">
+        <input id="start" type="button" value="Start">
+        <input id="stop" type="button" value="Stop">
+    </fieldset>
+    <fieldset>
+        <legend>Subs Received</legend>
+        <input id="subcount" type="number" value="0" min="0">
+    </fieldset>
+    <fieldset>
+        <legend>Subs To Consider</legend>
+        <div>
+            <input id="sub" type="checkbox" name="sub" checked>
+            <label for="sub">New Self-Subs</label>
+        </div>
+        <div>
+            <input id="resub" type="checkbox" name="resub" checked>
+            <label for="resub">Resubs</label>
+        </div>
+        <div>
+            <input id="giftsub" type="checkbox" name="giftsub" checked>
+            <label for="giftsub">Gifted Subs</label>
+        </div>
+        <div>
+            <input id="giftsub_com" type="checkbox" name="giftsub_com" checked>
+            <label for="giftsub_com">Community Gifted Sub</label>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Log</legend>
+        <div>
+            <input id="logsize" type="number" name="logsize" min="1" value="20">
+            <label for="logsize">Max Log Entries</label>
+        </div>
+        <section id="log"></section>
+    </fieldset>
+</body>
+</html>
