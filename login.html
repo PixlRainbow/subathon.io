@@ -11,8 +11,10 @@
             window.location.hash.substr(1)
         );
         let access_token = query_string.get('access_token');
-        if (access_token !== null)
+        if (access_token !== null) {
             window.opener.postMessage(access_token, 'http://localhost:8000');
+            window.opener.postMessage(access_token, 'https://pixlrainbow.github.io');
+        }
         window.close();
     </script>
 </head>

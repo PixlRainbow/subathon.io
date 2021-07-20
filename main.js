@@ -42,6 +42,18 @@ chat.connect().then(() => {
     }).catch(err => alert(err.message));
 }
 
+function constructAuthURL() {
+    let parentURL = window.location.href;
+    if(parentURL.substr(-1) !== '/')
+        parentURL += '/';
+    let authURL = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id="
+                + clientId
+                + "&redirect_uri="
+                + parentURL + "login.html"
+                + "&scope=chat:read+channel:read:subscriptions";
+    return authURL;
+}
+
 // chart code
 function subGraphSetup(initSeconds) {
     let updateHandlePromise = new Promise((resolve, reject) => {
@@ -138,7 +150,7 @@ window.onload = () => {
     loginButton.onclick = () => {
         if(token === null || username === null) {
             window.open(
-                "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=ft8ue4hxidti4b5hxsuaxr05fb12x1&redirect_uri=http://localhost:8000/login.html&scope=chat:read+channel:read:subscriptions"
+                constructAuthURL()
             );
         } else if(confirm("Really Log Out?")) {
             token = null;
