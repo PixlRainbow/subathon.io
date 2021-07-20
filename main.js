@@ -1,9 +1,9 @@
-const token = 'insert token here';
-const username = 'insert username here';
+// subathon.io public client ID
+const clientId = 'ft8ue4hxidti4b5hxsuaxr05fb12x1';
 
-var channel = 'channel to track';
+// var channel = 'channel to track';
 
-const { chat } = new window.TwitchJs({ username, token });
+// const { chat } = new window.TwitchJs({ username, token });
 
 var secondsLeft = 0;
 
@@ -31,14 +31,16 @@ function countASub(msg) {
     }
 }
 
+function connectTwitch(chat, channel) {
 chat.connect().then(() => {
     chat.join(channel).then(() => {
         chat.on('USERNOTICE/SUBSCRIPTION', countASub);
         chat.on('USERNOTICE/RESUBSCRIPTION', countASub);
         chat.on('USERNOTICE/SUBSCRIPTION_GIFT', countASub);
         chat.on('USERNOTICE/SUBSCRIPTION_GIFT_COMMUNITY', countASub);
-    });
-});
+        }).catch(err => alert(err.message));
+    }).catch(err => alert(err.message));
+}
 
 // chart code
 function subGraphSetup(initSeconds) {
@@ -127,6 +129,50 @@ window.onload = () => {
     /** @type {HTMLInputElement} */
     const subCountBox = document.getElementById("subcount");
     stop.disabled = true;
+
+    let token = localStorage.getItem("token");
+    let username = localStorage.getItem("username");
+    let twitchConnection = null;
+
+    const loginButton = document.getElementById("login");
+    loginButton.onclick = () => {
+        if(token === null || username === null) {
+            window.open(
+                "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=ft8ue4hxidti4b5hxsuaxr05fb12x1&redirect_uri=http://localhost:8000/login.html&scope=chat:read+channel:read:subscriptions"
+            );
+        } else if(confirm("Really Log Out?")) {
+            token = null;
+            username = null;
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            twitchConnection.disconnect();
+            loginButton.textContent = "Login";
+        }
+    };
+    window.addEventListener('message', async (ev) => {
+        if(ev.origin !== window.location.origin)
+            return;
+        if(typeof ev.data === "string") {
+            token = ev.data;
+            let {chat, api} = new window.TwitchJs({ clientId, token });
+            username = await api.get("users").then(
+                response => response.data[0].login
+            );
+            localStorage.setItem("token",token);
+            localStorage.setItem("username",username);
+            twitchConnection = chat;
+            // assume that you always want to look at your own channel (username passed as channel parameter)
+            // connectTwitch(twitchConnection, username);
+            // loginButton.textContent = username;
+            window.location.reload();
+        }
+    }, false);
+    if(token !== null && username !== null) {
+        twitchConnection = new window.TwitchJs({ username, token }).chat;
+        // assume that you always want to look at your own channel (username passed as channel parameter)
+        connectTwitch(twitchConnection, username);
+        loginButton.textContent = username;
+    }
 
     let timeUpdateHandle = 0,
         graphUpdateHandle = 0;

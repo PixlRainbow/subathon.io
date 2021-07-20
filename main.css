@@ -1,3 +1,13 @@
+body {
+    margin: 0;
+}
+header {
+    text-align: center;
+    background: lightgreen;
+    font-size: 16pt;
+    padding: 0.5em;
+    cursor: pointer;
+}
 input[type=number]{
     width: 2em;
     font-size: 48pt;
@@ -5,7 +15,7 @@ input[type=number]{
 input#logsize {
     font-size: initial;
 }
-fieldset, section#log {
+header, fieldset, section#log {
     font-family: sans-serif;
 }
 fieldset {
