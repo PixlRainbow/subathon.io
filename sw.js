@@ -1,5 +1,5 @@
 var APP_PREFIX = 'subathon.io_' ;    // Identifier for this app (this needs to be consistent across every cache update)
-var VERSION = 'alpha_01';            // Version of the off-line cache (change this value everytime you want to update cache)
+var VERSION = 'alpha_02';            // Version of the off-line cache (change this value everytime you want to update cache)
 var CACHE_NAME = APP_PREFIX + VERSION;
 var URLS = [                            // Add URL you want to cache in this list.
   '/',                     // If you have separate JS/CSS files,
@@ -14,7 +14,7 @@ var URLS = [                            // Add URL you want to cache in this lis
   '/manifest.json',
   '/sw.js'
 ];
-const GITHUB_PAGES = '/subathon.io/';
+const GITHUB_PAGES = '/subathon.io';
 
 // Respond with cached resources
 self.addEventListener('fetch', function (e) {
