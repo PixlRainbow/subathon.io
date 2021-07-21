@@ -198,7 +198,10 @@ window.onload = () => {
             let timeConverter = new Date(null);
             timeConverter.setSeconds(secondsLeft);
             let timeString = timeConverter.toISOString();
-            h.value = timeString.substr(11,2);
+            let hour = parseInt(timeString.substr(11,2));
+            let day = parseInt(timeString.substr(8,2)) - 1;
+            hour += (day * 24);
+            h.value = hour.toString().padStart(2, "0");
             m.value = timeString.substr(14,2);
             s.value = timeString.substr(17,2);
 
