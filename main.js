@@ -195,22 +195,19 @@ window.onload = () => {
             clearInterval(timeUpdateHandle);
         }
         else{
-            let timeConverter = new Date(null);
-            timeConverter.setSeconds(secondsLeft);
-            let timeString = timeConverter.toISOString();
-            let hour = parseInt(timeString.substr(11,2));
-            let day = parseInt(timeString.substr(8,2)) - 1;
-            hour += (day * 24);
-            h.value = hour.toString().padStart(2, "0");
-            m.value = timeString.substr(14,2);
-            s.value = timeString.substr(17,2);
+            let timeConverter = new Date(secondsLeft * 1000);
+            let day = timeConverter.getUTCDate() - 1;
+            h.value = (timeConverter.getUTCHours() + (day * 24)).toString().padStart(2,"0");
+            m.value = timeConverter.getUTCMinutes().toString().padStart(2,"0");
+            s.value = timeConverter.getUTCSeconds().toString().padStart(2,"0");
 
             subCountBox.value = subCount;
         }
     }
 
     start.onclick = () => {
-        secondsLeft = parseInt(h.value * 60 * 60) + parseInt(m.value * 60) + parseInt(s.value);
+        // Epoch (or the zeroth second by computer time) is 1970 January 1, 00:00:00.000
+        secondsLeft = Date.UTC(70, 0, 1, h.value, m.value, s.value) / 1000;
         console.log("1970 "+secondsLeft);
         subCount = parseInt(subCountBox.value);
         subCountBox.disabled = true;
