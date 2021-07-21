@@ -166,17 +166,19 @@ window.onload = () => {
             return;
         if(typeof ev.data === "string") {
             token = ev.data;
-            let {chat, api} = new window.TwitchJs({ clientId, token });
+            let {api} = new window.TwitchJs({ clientId, token });
             username = await api.get("users").then(
                 response => response.data[0].login
             );
             localStorage.setItem("token",token);
             localStorage.setItem("username",username);
-            twitchConnection = chat;
+            // for some reason, attempting to use the chat created previously above in let{api} cannot stay connnected
+            // as a workaround, have to create a brand new chat
+            twitchConnection = new window.TwitchJs({username, token}).chat;
             // assume that you always want to look at your own channel (username passed as channel parameter)
-            // connectTwitch(twitchConnection, username);
-            // loginButton.textContent = username;
-            window.location.reload();
+            connectTwitch(twitchConnection, username);
+            loginButton.textContent = username;
+            // window.location.reload();
         }
     }, false);
     if(token !== null && username !== null) {
