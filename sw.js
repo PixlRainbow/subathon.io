@@ -11,8 +11,7 @@ var URLS = [                            // Add URL you want to cache in this lis
   '/login.html',
   '/main.css',
   '/main.js',
-  '/manifest.json',
-  '/sw.js'
+  '/manifest.json'
 ];
 const GITHUB_PAGES = '/subathon.io';
 
@@ -28,8 +27,7 @@ self.addEventListener('fetch', function (e) {
         console.log('file is not cached, fetching : ' + e.request.url);
         return fetch(e.request);
       }
-
-      // You can omit if/else for console.log & put one line below like this too.
+      // Alternatively
       // return request || fetch(e.request)
     })
   )
