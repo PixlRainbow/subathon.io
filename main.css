@@ -22,3 +22,20 @@ fieldset {
     margin: 1em;
     border-radius: 8px;
 }
+.fluid-container {
+    /* fluid container groups elements into a single block, but the block flows like an inline element */
+    display: inline-block;
+    margin-top: 0.5em;
+}
+
+/* shrink font for mobile screens so that the timer fits in one line */
+@media only screen and (max-width: 500px) {
+    input[type=number]{
+        font-size: 32pt;
+    }
+}
+@media only screen and (max-width: 358px) {
+    input[type=number]{
+        font-size: 24pt;
+    }
+}
