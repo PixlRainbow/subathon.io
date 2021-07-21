@@ -5,6 +5,31 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Subathon.io</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="canonical" href="https://pixlrainbow.github.io/subathon.io/" />
+    <meta name="description" content="Subathon.io is a subathon countdown-cum-sub tracker">
+    <!--Social meta-->
+    <meta property="og:title" content="Subathon.io" />
+    <meta property="og:description" content="subathon countdown-cum-sub tracker" />
+    <meta property="og:image" content="icons/pedScam48.png" />
+    <meta property="og:type" content="website" />
+    <!--End social meta-->
+    <!---->
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/pedScam192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/pedScam48.png">
+    <link rel="icon" type="image/png" href="icons/pedScam48.png" />
+
+    <meta name="theme-color" content="#90ee90">
+    <link rel="manifest" href="manifest.json">
+    <script>
+        // register ServiceWorker, remember to use absolute path!
+        if (navigator.serviceWorker) {
+            let parentURL = window.location.pathname;
+            if(parentURL.substr(-1) !== '/')
+                parentURL += '/';
+            navigator.serviceWorker.register(parentURL + 'sw.js', {scope: parentURL});
+        }
+    </script>
+    <!---->
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src="https://unpkg.com/twitch-js@>2.0.0-beta.31"></script>
     <script src="https://code.highcharts.com/stock/highstock.js"></script>

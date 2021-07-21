@@ -1,0 +1,32 @@
+{
+    "name": "Subathon.io",
+    "short_name": "subathon.io",
+    "start_url": "./", 
+    "scope": ".",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#90ee90",
+    "theme_color": "#90ee90",
+    "icons": [
+      {
+        "src": "icons/pedScam48.png",
+        "type": "image/png",
+        "sizes": "48x48"
+      },
+      {
+        "src": "icons/pedScam128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "src": "icons/pedScam192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "icons/pedScam512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ]
+  }
