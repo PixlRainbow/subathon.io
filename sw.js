@@ -1,13 +1,12 @@
 var APP_PREFIX = 'subathon.io_' ;    // Identifier for this app (this needs to be consistent across every cache update)
-var VERSION = 'alpha_05';            // Version of the off-line cache (change this value everytime you want to update cache)
+var VERSION = 'alpha_06';            // Version of the off-line cache (change this value everytime you want to update cache)
 var CACHE_NAME = APP_PREFIX + VERSION;
 var URLS = [                            // Add URL you want to cache in this list.
   '/',                     // If you have separate JS/CSS files,
   '/index.html',           // add path to those files here
   '/icons/pedScam48.png',
-  '/icons/pedScam128.png',
-  '/icons/pedScam192.png',
-  '/icons/pedScam512.png',
+  '/icons/pedapp192.png',
+  '/icons/pedapp512.png',
   '/login.html',
   '/main.css',
   '/main.js',

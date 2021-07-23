@@ -17,3 +17,5 @@ cd subathon.io
 # start the Python3 built-in http server
 python3 -m http.server
 ```
+## Special Thanks and Credits
+Thanks to SarguCopperpot for designing the app icons!
