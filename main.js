@@ -5,6 +5,9 @@ const clientId = 'ft8ue4hxidti4b5hxsuaxr05fb12x1';
 
 // const { chat } = new window.TwitchJs({ username, token });
 
+/** @type {SubGraph} */
+let graph;
+
 var secondsLeft = 0;
 
 var subCount = 0;
@@ -28,16 +31,17 @@ function countASub(msg) {
         }
 
         secondsLeft += 60;
+        graph.setTimeMS(secondsLeft * 1000);
     }
 }
 
 function connectTwitch(chat, channel) {
-chat.connect().then(() => {
-    chat.join(channel).then(() => {
-        chat.on('USERNOTICE/SUBSCRIPTION', countASub);
-        chat.on('USERNOTICE/RESUBSCRIPTION', countASub);
-        chat.on('USERNOTICE/SUBSCRIPTION_GIFT', countASub);
-        chat.on('USERNOTICE/SUBSCRIPTION_GIFT_COMMUNITY', countASub);
+    chat.connect().then(() => {
+        chat.join(channel).then(() => {
+            chat.on('USERNOTICE/SUBSCRIPTION', countASub);
+            chat.on('USERNOTICE/RESUBSCRIPTION', countASub);
+            chat.on('USERNOTICE/SUBSCRIPTION_GIFT', countASub);
+            chat.on('USERNOTICE/SUBSCRIPTION_GIFT_COMMUNITY', countASub);
         }).catch(err => alert(err.message));
     }).catch(err => alert(err.message));
 }
@@ -142,6 +146,8 @@ window.onload = () => {
     const subCountBox = document.getElementById("subcount");
     stop.disabled = true;
 
+    graph = new SubGraph("#graphbox");
+
     let token = localStorage.getItem("token");
     let username = localStorage.getItem("username");
     let twitchConnection = null;
@@ -195,6 +201,7 @@ window.onload = () => {
         if(--secondsLeft <= 0){
             s.value = "0";
             clearInterval(timeUpdateHandle);
+            graph.suspendAnimate();
         }
         else{
             let timeConverter = new Date(secondsLeft * 1000);
@@ -205,7 +212,7 @@ window.onload = () => {
 
             subCountBox.value = subCount;
         }
-    }
+    }    
 
     start.onclick = () => {
         // Epoch (or the zeroth second by computer time) is 1970 January 1, 00:00:00.000
@@ -214,9 +221,11 @@ window.onload = () => {
         subCount = parseInt(subCountBox.value);
         subCountBox.disabled = true;
         timeUpdateHandle = setInterval(updateCounter, 1000);
-        subGraphSetup(secondsLeft).then(handle => {
-            graphUpdateHandle = handle;
-        });
+        // subGraphSetup(secondsLeft).then(handle => {
+        //     graphUpdateHandle = handle;
+        // });
+        graph.setTimeMS(secondsLeft * 1000);
+        graph.beginAnimate();
         start.disabled = true;
         stop.disabled = false;
 
@@ -226,7 +235,8 @@ window.onload = () => {
     };
     stop.onclick = () => {
         clearInterval(timeUpdateHandle);
-        clearInterval(graphUpdateHandle);
+        // clearInterval(graphUpdateHandle);
+        graph.suspendAnimate();
         start.disabled = false;
         stop.disabled = true;
         subCountBox.disabled = false;

@@ -27,6 +27,12 @@ fieldset {
     display: inline-block;
     margin-top: 0.5em;
 }
+.canvas-plot {
+    margin: auto;
+    display: block;
+    top: 80px;
+    position: relative;
+}
 
 /* shrink font for mobile screens so that the timer fits in one line */
 @media only screen and (max-width: 500px) {
