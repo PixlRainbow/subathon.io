@@ -257,4 +257,24 @@ window.onload = () => {
             }
         }
     };
+    
+    /** @type {HTMLInputElement} */
+    const popoutBtn = document.getElementById('popout');
+    /** @type {Window} */
+    let popout = undefined;
+    /** @type {CanvasRenderingContext2D} */
+    let popoutCtx = undefined;
+    popoutBtn.onclick = () => {
+        const props = graph.graph_props;
+        if(popout === undefined || popout.closed) {
+            popout = window.open('', '_blank', `width=${props.outerWidth},height=${props.outerHeight}`);
+            popout.document.body.style.margin = '0';
+            popoutCtx = graph.createMirrorCanvas(popout);
+            popout.onclose = () => {
+                popoutCtx = undefined;
+            };
+        } else {
+            popout.focus();
+        }
+    };
 };

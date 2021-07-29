@@ -27,11 +27,17 @@ fieldset {
     display: inline-block;
     margin-top: 0.5em;
 }
-.canvas-plot {
-    margin: auto;
-    display: block;
-    top: 80px;
-    position: relative;
+#graphbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.canvas-wrapper {
+    resize: both;
+    margin: 0;
+    overflow: hidden;
+    border: lightgreen 2px dashed;
 }
 
 /* shrink font for mobile screens so that the timer fits in one line */

@@ -3,7 +3,7 @@ class SubGraph {
         return 4800;
     }
     /**
-     * @param {string} containerName 
+     * @param {string | HTMLElement} containerName 
      */
     constructor(containerName) {
         /** @type {Number[]} */
@@ -21,27 +21,79 @@ class SubGraph {
                 bottom: 64
             }
         };
+        /** @type {Window} */
+        this.popout = undefined;
         this.container = d3.select(containerName);
         const props = this.graph_props;
+        // resizable wrapper
+        this.chartWrapper = this.container.append('figure')
+            .lower()
+            .attr('class','canvas-wrapper');
+
         // Init canvas
-        this.canvasChart = this.container.append('canvas')
+        this.canvasChart = this.chartWrapper.append('canvas')
             .attr('width', props.outerWidth)
             .attr('height', props.outerHeight)
             .attr('class', 'canvas-plot');
         /** @type {CanvasRenderingContext2D} */
         this.context = this.canvasChart.node().getContext('2d');
 
+        // detect when wrapper is resized by user dragging it
+        this.debounce = false;
+        this.resizeObs = new ResizeObserver((entries => {
+            for(let entry of entries) {
+                if(entry.target.matches('.canvas-wrapper')) {
+                    const cv = this.context.canvas;
+                    const newSize = entry.contentRect;
+                    if(this.popout === undefined || this.popout.closed){
+                        cv.width = newSize.width;
+                        cv.height = newSize.height;
+                        props.outerWidth = cv.width;
+                        props.outerHeight = cv.height;
+                        this.xgen();
+                        this.ygen();
+                        if(this.previousStamp === undefined){
+                            this.startLine();
+                            this.hist_buffer.forEach((point, index) => this.drawLine(index, point));
+                            this.endLine();
+                        }
+                    } else {
+                        // compute browser border because resizeTo only allows us to control outer size
+                        const popout = this.popout;
+                        let xborder = popout.outerWidth - popout.innerWidth;
+                        let yborder = popout.outerHeight - popout.innerHeight;
+                        this.popout.resizeTo(newSize.width + xborder, newSize.height + yborder);
+                        // and the resize handler should handle the rest
+                    }
+                    this.debounce = true;
+                    break;
+                }
+            }
+        }).bind(this));
+        this.chartWrapper.on('mousedown',(e => {
+            this.resizeObs.observe(e.target)
+        }).bind(this));
+        this.chartWrapper.on('mouseup', (e => {
+            this.resizeObs.disconnect();
+            this.debounce = false;
+        }).bind(this));
+
         // Init Scales
         this.x = d3.scaleLinear()
-            .domain([0, SubGraph.BUFSIZ])
-            .range([0, props.outerWidth]);
-        this.y = d3.scaleLinear()
-            .domain(d3.extent(this.hist_buffer))
-            .range([props.outerHeight - props.margin.bottom, props.margin.top]);
+            .domain([0, SubGraph.BUFSIZ]);
+        this.xgen();
+        this.y = d3.scaleLinear();
+        this.ygen();
         this.previousStamp = undefined;
     }
+    xgen() {
+        this.x.range([0, this.graph_props.outerWidth]);
+    }
     ygen() {
-        this.y.domain(d3.extent(this.hist_buffer));
+        const props = this.graph_props;
+        this.y
+            .domain(d3.extent(this.hist_buffer))
+            .range([props.outerHeight - props.margin.bottom, props.margin.top]);
     }
     startLine() {
         const context = this.context;
@@ -95,5 +147,47 @@ class SubGraph {
                 this.hist_buffer.push(this.millisecondsLeft);
             }
         }
+    }
+    /**
+     * @param {Window} popout 
+     */
+    createMirrorCanvas(popout) {
+        const props = this.graph_props;
+        let popoutCanvas = popout.document.createElement('canvas');
+        popout.document.body.appendChild(popoutCanvas);
+        popoutCanvas.width = props.outerWidth;
+        popoutCanvas.height = props.outerHeight;
+
+        popout.onresize = (() => {
+            props.outerHeight = popout.innerHeight;
+            props.outerWidth = popout.innerWidth;
+            /** @type {HTMLCanvasElement} */
+            let cv = this.canvasChart.node();
+            cv.width = props.outerWidth;
+            cv.height = props.outerHeight;
+            popoutCanvas.width = props.outerWidth;
+            popoutCanvas.height = props.outerHeight;
+            if(!this.debounce){
+                this.chartWrapper.style('width','');
+                this.chartWrapper.style('height','');
+            }
+            this.xgen();
+            this.ygen();
+            if(this.previousStamp === undefined){
+                this.startLine();
+                this.hist_buffer.forEach((point, index) => this.drawLine(index, point));
+                this.endLine();
+            }
+        }).bind(this);
+
+        const popoutCtx = popoutCanvas.getContext('2d');
+        const copyCanvas = msTimestamp => {
+            popoutCtx.clearRect(0, 0, props.outerWidth, props.outerHeight);
+            popoutCtx.drawImage(this.canvasChart.node(), 0, 0);
+            requestAnimationFrame(copyCanvas);
+        };
+        requestAnimationFrame(copyCanvas.bind(this));
+        this.popout = popout;
+        return popoutCtx;
     }
 }
