@@ -84,14 +84,24 @@ class SubGraph {
         // Init Scales
         this.x = d3.scaleLinear()
             .domain([0, SubGraph.BUFSIZ]);
-        this.xgen();
         this.y = d3.scaleLinear();
-        this.ygen();
         this.previousStamp = undefined;
 
         // callback to retrieve time
         /** @type {function():string} */
         this.onRequestTime = () => '00:00:00';
+
+        // fill history with random values to make previewing easier
+        for (let iter = 0, data = 0; iter < SubGraph.BUFSIZ; iter++) {
+            if(iter % 100 == 0)
+                data = Math.random() * this.millisecondsLeft;
+            this.hist_buffer.push(data);
+        }
+        // generate preview
+        this.xgen();
+        this.ygen();
+        this.doFrame(0);
+        this.suspendAnimate();
     }
     xgen() {
         this.x.range([0, this.graph_props.outerWidth]);
@@ -163,11 +173,9 @@ class SubGraph {
      */
     setTimeMS(milliseconds) {
         this.millisecondsLeft = milliseconds;
-        if(this.hist_buffer.length == 0) {
-            for (let iter = 0; iter < SubGraph.BUFSIZ; iter++) {
-                this.hist_buffer.push(this.millisecondsLeft);
-            }
-        }
+    }
+    flattenGraph() {
+        this.hist_buffer.fill(this.millisecondsLeft);
     }
     /**
      * @param {Window} popout 

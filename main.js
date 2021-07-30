@@ -215,6 +215,8 @@ window.onload = () => {
         }
     }    
 
+    // if this is the first click of the start button, start from a flat graph
+    let firstStart = true;
     start.onclick = () => {
         // Epoch (or the zeroth second by computer time) is 1970 January 1, 00:00:00.000
         secondsLeft = Date.UTC(70, 0, 1, h.value, m.value, s.value) / 1000;
@@ -226,6 +228,10 @@ window.onload = () => {
         //     graphUpdateHandle = handle;
         // });
         graph.setTimeMS(secondsLeft * 1000);
+        if(firstStart) {
+            graph.flattenGraph();
+            firstStart = false;
+        }
         graph.beginAnimate();
         start.disabled = true;
         stop.disabled = false;
