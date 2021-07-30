@@ -73,12 +73,15 @@ class SubGraph {
                 }
             }
         }).bind(this));
-        this.chartWrapper.on('mousedown',(e => {
-            this.resizeObs.observe(e.target)
+        this.chartWrapper.on('pointerdown',(e => {
+            if(e.isPrimary)
+                this.resizeObs.observe(e.target);
         }).bind(this));
-        this.chartWrapper.on('mouseup', (e => {
-            this.resizeObs.disconnect();
-            this.debounce = false;
+        this.chartWrapper.on('pointerup', (e => {
+            if(e.isPrimary) {
+                this.resizeObs.disconnect();
+                this.debounce = false;
+            }
         }).bind(this));
 
         // Init Scales
