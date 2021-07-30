@@ -38,6 +38,19 @@ fieldset {
     margin: 0;
     overflow: hidden;
     border: lightgreen 2px dashed;
+    position: relative;
+}
+.canvas-wrapper::after {
+    content: " ";
+    mix-blend-mode: difference;
+    width: 16px;
+    height: 16px;
+    border: 8px solid rgb(128,128,128);
+    /* background: rgba(128,128,128,0.5); */
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
 }
 
 /* shrink font for mobile screens so that the timer fits in one line */
