@@ -147,6 +147,7 @@ window.onload = () => {
     stop.disabled = true;
 
     graph = new SubGraph("#graphbox");
+    graph.onRequestTime = () => `${h.value}:${m.value}:${s.value}`;
 
     let token = localStorage.getItem("token");
     let username = localStorage.getItem("username");

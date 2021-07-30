@@ -19,7 +19,9 @@ class SubGraph {
             margin: {
                 top: 32,
                 bottom: 64
-            }
+            },
+            fontColor: '#000',
+            fontStyle: '64px sans-serif'
         };
         /** @type {Window} */
         this.popout = undefined;
@@ -85,6 +87,10 @@ class SubGraph {
         this.y = d3.scaleLinear();
         this.ygen();
         this.previousStamp = undefined;
+
+        // callback to retrieve time
+        /** @type {function():string} */
+        this.onRequestTime = () => '00:00:00';
     }
     xgen() {
         this.x.range([0, this.graph_props.outerWidth]);
@@ -116,6 +122,19 @@ class SubGraph {
         context.stroke();
         context.fill();
     }
+    drawTime() {
+        const context = this.context;
+        const props = this.graph_props;
+        context.fillStyle = props.fontColor;
+        context.font = props.fontStyle;
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(
+            this.onRequestTime(),
+            props.outerWidth / 2,
+            props.outerHeight / 2
+        );
+    }
     doFrame(msTimestamp) {
         if(this.previousStamp !== undefined) {
             const elapsed = msTimestamp - this.previousStamp;
@@ -127,6 +146,7 @@ class SubGraph {
         this.startLine();
         this.hist_buffer.forEach((point, index) => this.drawLine(index, point));
         this.endLine();
+        this.drawTime();
         this.previousStamp = msTimestamp;
         this.frameHandle = requestAnimationFrame(this.doFrame.bind(this));
     }
