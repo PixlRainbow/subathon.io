@@ -58,6 +58,7 @@ class SubGraph {
                             this.startLine();
                             this.hist_buffer.forEach((point, index) => this.drawLine(index, point));
                             this.endLine();
+                            this.drawTime();
                         }
                     } else {
                         // compute browser border because resizeTo only allows us to control outer size
@@ -197,6 +198,7 @@ class SubGraph {
                 this.startLine();
                 this.hist_buffer.forEach((point, index) => this.drawLine(index, point));
                 this.endLine();
+                this.drawTime();
             }
         }).bind(this);
 
