@@ -52,6 +52,24 @@ fieldset {
     right: 0;
     clip-path: polygon(100% 0, 0% 100%, 100% 100%);
 }
+.time-highlight {
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
+}
+.time-highlight::before {
+    content: " ";
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 2px solid lightgray;
+    mix-blend-mode: difference;
+    box-sizing: border-box;
+}
+.time-highlight:hover, .time-highlight:focus-within {
+    opacity: 1;
+    overflow: initial;
+}
 
 /* shrink font for mobile screens so that the timer fits in one line */
 @media only screen and (max-width: 500px) {

@@ -40,6 +40,16 @@ class SubGraph {
         /** @type {CanvasRenderingContext2D} */
         this.context = this.canvasChart.node().getContext('2d');
 
+        // text bounding box highlight
+        this.textBoundHL = this.chartWrapper.append('div')
+            .attr('class', 'time-highlight');
+        this.textBound = {
+            left: 0,
+            top: 0,
+            width: 0,
+            height: 0
+        };
+
         // detect when wrapper is resized by user dragging it
         this.debounce = false;
         this.resizeObs = new ResizeObserver((entries => {
@@ -105,6 +115,7 @@ class SubGraph {
         this.ygen();
         this.doFrame(0);
         this.suspendAnimate();
+        this.updateBounds();
     }
     xgen() {
         this.x.range([0, this.graph_props.outerWidth]);
@@ -179,6 +190,21 @@ class SubGraph {
     }
     flattenGraph() {
         this.hist_buffer.fill(this.millisecondsLeft);
+    }
+    updateBounds() {
+        const props = this.graph_props;
+        const coords = this.context.measureText(this.onRequestTime());
+        const bounds = this.textBound;
+        const margin = 8;
+        bounds.left = (props.outerWidth / 2) - coords.actualBoundingBoxLeft - margin;
+        bounds.top = (props.outerHeight / 2) - coords.actualBoundingBoxAscent - margin;
+        bounds.width = coords.actualBoundingBoxLeft + coords.actualBoundingBoxRight + (margin * 2);
+        bounds.height = coords.actualBoundingBoxAscent + coords.actualBoundingBoxDescent + (margin * 2);
+
+        Object.keys(bounds).forEach(
+            k => this.textBoundHL.style(k, `${bounds[k]}px`), 
+            this
+        );
     }
     /**
      * @param {Window} popout 
