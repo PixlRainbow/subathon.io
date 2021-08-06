@@ -200,7 +200,7 @@ window.onload = () => {
 
     function updateCounter() {
         if(--secondsLeft <= 0){
-            s.value = "0";
+            s.value = "00";
             clearInterval(timeUpdateHandle);
             graph.suspendAnimate();
         }
