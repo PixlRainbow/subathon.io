@@ -49,6 +49,14 @@ class SubGraph {
             width: 0,
             height: 0
         };
+        // formatting editor dialog
+        /** @type {FormatBox} */
+        this.formatBox = new FormatBox(
+            this.textBoundHL.append('div')
+                .attr('class', 'format-box')
+                .node()
+        );
+        this.formatBox.onFormatChange = this.updateFormatting.bind(this);
 
         // detect when wrapper is resized by user dragging it
         this.debounce = false;
@@ -205,6 +213,12 @@ class SubGraph {
             k => this.textBoundHL.style(k, `${bounds[k]}px`), 
             this
         );
+    }
+    updateFormatting(formatting) {
+        const props = this.graph_props;
+        props.fontStyle = 
+            `${formatting.italic ? 'italic ' : ''}${formatting.bold ? 'bold ' : ''}${formatting.fontSize}px ${formatting.fontFamily}`;
+        props.fontColor = formatting.color;
     }
     /**
      * @param {Window} popout 

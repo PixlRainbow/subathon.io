@@ -8,7 +8,7 @@ header {
     padding: 0.5em;
     cursor: pointer;
 }
-input[type=number]{
+body > fieldset input[type=number]{
     width: 2em;
     font-size: 48pt;
 }
@@ -52,9 +52,9 @@ fieldset {
     right: 0;
     clip-path: polygon(100% 0, 0% 100%, 100% 100%);
 }
+/* Outline around the canvas time */
 .time-highlight {
     position: absolute;
-    opacity: 0;
     overflow: hidden;
 }
 .time-highlight::before {
@@ -62,13 +62,55 @@ fieldset {
     width: 100%;
     height: 100%;
     display: block;
-    border: 2px solid lightgray;
+    border: 2px solid rgba(211, 211, 211, 0);
     mix-blend-mode: difference;
     box-sizing: border-box;
+    transition: border 300ms;
 }
-.time-highlight:hover, .time-highlight:focus-within {
-    opacity: 1;
+.time-highlight:is(:hover, :focus-within) {
     overflow: initial;
+}
+.time-highlight:is(:hover, :focus-within)::before {
+    border: 2px solid rgba(211, 211, 211, 1);
+}
+/* time font formatting editor */
+.format-box {
+    position: absolute;
+    top: 100%;
+    background: rgba(245, 245, 245, 0.6);
+    padding: 5%;
+    transition: opacity 300ms;
+    opacity: 0;
+    line-height: 1.5;
+}
+.time-highlight:is(:hover, :focus-within) > .format-box {
+    opacity: 1;
+}
+.format-box input[type=number] {
+    width: 4em;
+}
+.format-box label {
+    /* border: 1px solid black; */
+}
+.format-box input[type=checkbox] {
+    visibility: hidden;
+    position: absolute;
+}
+.format-box label span {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    padding: 0.1em;
+    margin: 0.25em;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    text-align: center;
+    user-select: none;
+    border-radius: 2px;
+    transition: background 100ms;
+}
+.format-box :checked + span {
+    background: white;
 }
 
 /* shrink font for mobile screens so that the timer fits in one line */
