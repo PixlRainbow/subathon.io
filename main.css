@@ -115,12 +115,12 @@ fieldset {
 
 /* shrink font for mobile screens so that the timer fits in one line */
 @media only screen and (max-width: 500px) {
-    input[type=number]{
+    body > fieldset input[type=number]{
         font-size: 32pt;
     }
 }
 @media only screen and (max-width: 358px) {
-    input[type=number]{
+    body > fieldset input[type=number]{
         font-size: 24pt;
     }
 }
