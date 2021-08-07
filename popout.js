@@ -123,7 +123,6 @@ class SubGraph {
         this.ygen();
         this.doFrame(0);
         this.suspendAnimate();
-        this.updateBounds();
     }
     xgen() {
         this.x.range([0, this.graph_props.outerWidth]);
@@ -182,6 +181,7 @@ class SubGraph {
         this.drawTime();
         this.previousStamp = msTimestamp;
         this.frameHandle = requestAnimationFrame(this.doFrame.bind(this));
+        this.updateBounds();
     }
     beginAnimate() {
         this.frameHandle = requestAnimationFrame(this.doFrame.bind(this));
@@ -219,6 +219,11 @@ class SubGraph {
         props.fontStyle = 
             `${formatting.italic ? 'italic ' : ''}${formatting.bold ? 'bold ' : ''}${formatting.fontSize}px ${formatting.fontFamily}`;
         props.fontColor = formatting.color;
+        if(this.previousStamp === undefined) {
+            // if animation is not currently running, update the preview with the new formatting
+            this.doFrame(0);
+            this.suspendAnimate();
+        }
     }
     /**
      * @param {Window} popout 

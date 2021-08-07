@@ -210,7 +210,6 @@ window.onload = () => {
             h.value = (timeConverter.getUTCHours() + (day * 24)).toString().padStart(2,"0");
             m.value = timeConverter.getUTCMinutes().toString().padStart(2,"0");
             s.value = timeConverter.getUTCSeconds().toString().padStart(2,"0");
-            graph.updateBounds();
 
             subCountBox.value = subCount;
         }
@@ -233,7 +232,6 @@ window.onload = () => {
             graph.flattenGraph();
             firstStart = false;
         }
-        graph.updateBounds();
         graph.beginAnimate();
         start.disabled = true;
         stop.disabled = false;
