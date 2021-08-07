@@ -82,6 +82,7 @@ fieldset {
     transition: opacity 300ms;
     opacity: 0;
     line-height: 1.5;
+    width: min-content;
 }
 .time-highlight:is(:hover, :focus-within) > .format-box {
     opacity: 1;
