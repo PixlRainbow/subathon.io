@@ -1,0 +1,20 @@
+/* Outline around the canvas time */
+.time-highlight:-moz-any(:hover, :focus-within) {
+    overflow: initial;
+}
+.time-highlight:-moz-any(:hover, :focus-within)::before {
+    border: 2px solid rgba(211, 211, 211, 1);
+}
+.time-highlight:-webkit-any(:hover, :focus-within) {
+    overflow: initial;
+}
+.time-highlight:-webkit-any(:hover, :focus-within)::before {
+    border: 2px solid rgba(211, 211, 211, 1);
+}
+/* time font formatting editor */
+.time-highlight:-moz-any(:hover, :focus-within) > .format-box {
+    opacity: 1;
+}
+.time-highlight:-webkit-any(:hover, :focus-within) > .format-box {
+    opacity: 1;
+}

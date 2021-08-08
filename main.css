@@ -92,9 +92,6 @@ fieldset {
 .format-box input[type=number] {
     width: 4em;
 }
-.format-box label {
-    /* border: 1px solid black; */
-}
 .format-box input[type=checkbox] {
     visibility: hidden;
     position: absolute;
