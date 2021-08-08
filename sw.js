@@ -10,9 +10,9 @@ var URLS = [                            // Add URL you want to cache in this lis
   '/login.html',
   '/prefix-compat.css',
   '/main.css',
-  '/main.js',
-  '/popout.js',
-  '/formatter.js',
+  '/scripts/main.js',
+  '/scripts/popout.js',
+  '/scripts/formatter.js',
   '/manifest.json'
 ];
 const GITHUB_PAGES = '/subathon.io';

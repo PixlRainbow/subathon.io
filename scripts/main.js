@@ -58,7 +58,7 @@ function constructAuthURL() {
     return authURL;
 }
 
-// chart code
+// chart code (DEPRECATED)
 function subGraphSetup(initSeconds) {
     let updateHandlePromise = new Promise((resolve, reject) => {
         // Create the chart
@@ -155,18 +155,18 @@ window.onload = () => {
 
     const loginButton = document.getElementById("login");
     loginButton.onclick = () => {
-        if(token === null || username === null) {
-            window.open(
-                constructAuthURL()
-            );
-        } else if(confirm("Really Log Out?")) {
-            token = null;
-            username = null;
-            localStorage.removeItem("token");
-            localStorage.removeItem("username");
-            twitchConnection.disconnect();
-            loginButton.textContent = "Login";
-        }
+            if(token === null || username === null) {
+                window.open(
+                    constructAuthURL()
+                );
+            } else if(confirm("Really Log Out?")) {
+                token = null;
+                username = null;
+                localStorage.removeItem("token");
+                localStorage.removeItem("username");
+                twitchConnection.disconnect();
+                loginButton.textContent = "Login";
+            }
     };
     window.addEventListener('message', async (ev) => {
         if(ev.origin !== window.location.origin)
