@@ -119,6 +119,9 @@ class SubGraph {
                 data = Math.random() * this.millisecondsLeft;
             this.hist_buffer.push(data);
         }
+        // benchmark init
+        this.performance_buf = new Float32Array(375);
+        this.performance_index = 0;
         // generate preview
         this.xgen();
         this.ygen();
@@ -169,6 +172,7 @@ class SubGraph {
         );
     }
     doFrame(msTimestamp) {
+        const before = performance.now();
         if(this.previousStamp !== undefined) {
             const elapsed = msTimestamp - this.previousStamp;
             this.millisecondsLeft -= elapsed;
@@ -181,8 +185,14 @@ class SubGraph {
         this.endLine();
         this.drawTime();
         this.previousStamp = msTimestamp;
+        this.performance_buf[this.performance_index++] = performance.now() - before;
         this.frameHandle = requestAnimationFrame(this.doFrame.bind(this));
         this.updateBounds();
+        if(this.performance_index >= this.performance_buf.length) {
+            console.log(d3.sum(this.performance_buf) / this.performance_buf.length);
+            this.performance_index = 0;
+            console.log("hist_decimated length snapshot: "+(await this.hist_decimated).length);
+        }
     }
     beginAnimate() {
         this.frameHandle = requestAnimationFrame(this.doFrame.bind(this));
