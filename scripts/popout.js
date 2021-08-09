@@ -119,14 +119,16 @@ class SubGraph {
                 data = Math.random() * this.millisecondsLeft;
             this.hist_buffer.push(data);
         }
+        // pre-render init
+        this.decimateGraph();
         // benchmark init
         this.performance_buf = new Float32Array(375);
         this.performance_index = 0;
         // generate preview
         this.xgen();
         this.ygen();
-        this.doFrame(0);
-        this.suspendAnimate();
+        this.doFrame(0)
+            .then(this.suspendAnimate.bind(this));
     }
     xgen() {
         this.x.range([0, this.graph_props.outerWidth]);
@@ -171,7 +173,7 @@ class SubGraph {
             props.outerHeight / 2
         );
     }
-    doFrame(msTimestamp) {
+    async doFrame(msTimestamp) {
         const before = performance.now();
         if(this.previousStamp !== undefined) {
             const elapsed = msTimestamp - this.previousStamp;
@@ -181,13 +183,14 @@ class SubGraph {
             this.ygen();
         }
         this.startLine();
-        this.hist_buffer.forEach((point, index) => this.drawLine(index, point));
+        (await this.hist_decimated).forEach(coords => this.drawLine(coords[0], coords[1]));
         this.endLine();
         this.drawTime();
         this.previousStamp = msTimestamp;
         this.performance_buf[this.performance_index++] = performance.now() - before;
         this.frameHandle = requestAnimationFrame(this.doFrame.bind(this));
         this.updateBounds();
+        this.decimateGraph();
         if(this.performance_index >= this.performance_buf.length) {
             console.log(d3.sum(this.performance_buf) / this.performance_buf.length);
             this.performance_index = 0;
@@ -209,6 +212,17 @@ class SubGraph {
     }
     flattenGraph() {
         this.hist_buffer.fill(this.millisecondsLeft);
+    }
+    decimateGraph() {
+        this.hist_decimated = new Promise((resolve, reject) => {
+            const segment_coords = this.hist_buffer.map((point, index) => [index, point]);
+            const merged_segments = segment_coords.filter(
+                (coords, index, ref) => index === 0
+                || index === ref.length - 1
+                || Math.abs((coords[1] - ref[index+1][1]) - (ref[index-1][1] - coords[1])) > 1
+            );
+            resolve(merged_segments);
+        });
     }
     updateBounds() {
         const props = this.graph_props;
@@ -232,8 +246,8 @@ class SubGraph {
         props.fontColor = formatting.color;
         if(this.previousStamp === undefined) {
             // if animation is not currently running, update the preview with the new formatting
-            this.doFrame(0);
-            this.suspendAnimate();
+            this.doFrame(0)
+                .then(this.suspendAnimate.bind(this));
         }
     }
     /**
