@@ -23,6 +23,9 @@ class SubGraph {
             fontColor: '#000',
             fontStyle: '64px sans-serif'
         };
+        // frame capping based on frame time in ms
+        this.frameWait = 0;
+        this.setFPS(30);
         /** @type {Window} */
         this.popout = undefined;
         this.container = d3.select(containerName);
@@ -130,6 +133,10 @@ class SubGraph {
         this.doFrame(0)
             .then(this.suspendAnimate.bind(this));
     }
+    setFPS(fps) {
+        this.frameWait = fps <= 0 ? 0 : 1000/fps;
+        console.log(`FPS set to ${fps}. frameWait = ${this.frameWait}ms`);
+    }
     xgen() {
         this.x.range([0, this.graph_props.outerWidth]);
     }
@@ -177,6 +184,10 @@ class SubGraph {
         const before = performance.now();
         if(this.previousStamp !== undefined) {
             const elapsed = msTimestamp - this.previousStamp;
+            if (elapsed < this.frameWait) {
+                this.frameHandle = requestAnimationFrame(this.doFrame.bind(this));
+                return;
+            }
             this.millisecondsLeft -= elapsed;
             this.hist_buffer.shift();
             this.hist_buffer.push(this.millisecondsLeft);
@@ -215,13 +226,15 @@ class SubGraph {
     }
     decimateGraph() {
         this.hist_decimated = new Promise((resolve, reject) => {
-            const segment_coords = this.hist_buffer.map((point, index) => [index, point]);
-            const merged_segments = segment_coords.filter(
-                (coords, index, ref) => index === 0
-                || index === ref.length - 1
-                || Math.abs((coords[1] - ref[index+1][1]) - (ref[index-1][1] - coords[1])) > 1
-            );
-            resolve(merged_segments);
+            setTimeout(() => {
+                const segment_coords = this.hist_buffer.map((point, index) => [index, point]);
+                const merged_segments = segment_coords.filter(
+                    (coords, index, ref) => index === 0
+                    || index === ref.length - 1
+                    || Math.abs((coords[1] - ref[index+1][1]) - (ref[index-1][1] - coords[1])) > 1
+                );
+                resolve(merged_segments);
+            });
         });
     }
     updateBounds() {

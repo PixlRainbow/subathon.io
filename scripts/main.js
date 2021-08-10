@@ -149,6 +149,11 @@ window.onload = () => {
     graph = new SubGraph("#graphbox");
     graph.onRequestTime = () => `${h.value}:${m.value}:${s.value}`;
 
+    document.querySelectorAll('input[name=fps]')
+        .forEach(fpsOption => fpsOption.addEventListener('change',
+            ev => graph.setFPS(parseInt(ev.target.value))
+        ));
+
     let token = localStorage.getItem("token");
     let username = localStorage.getItem("username");
     let twitchConnection = null;
