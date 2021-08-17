@@ -139,8 +139,7 @@ class SubGraph {
         // generate preview
         this.xgen();
         this.ygen();
-        this.doFrame(0)
-            .then(this.suspendAnimate.bind(this));
+        this.trySingleFrame();
     }
     setFPS(fps) {
         this.frameWait = fps <= 0 ? 0 : 1000/fps;
@@ -246,6 +245,13 @@ class SubGraph {
             });
         });
     }
+    trySingleFrame() {
+        if(this.previousStamp === undefined) {
+            // if animation is not currently running, update the preview by rendering one new frame
+            this.doFrame(0)
+                .then(this.suspendAnimate.bind(this));
+        }
+    }
     updateBounds() {
         const props = this.graph_props;
         const coords = this.context.measureText(this.onRequestTime());
@@ -266,20 +272,14 @@ class SubGraph {
         props.fontStyle = 
             `${formatting.italic ? 'italic ' : ''}${formatting.bold ? 'bold ' : ''}${formatting.fontSize}px ${formatting.fontFamily}`;
         props.fontColor = formatting.color;
-        if(this.previousStamp === undefined) {
-            // if animation is not currently running, update the preview with the new formatting
-            this.doFrame(0)
-                .then(this.suspendAnimate.bind(this));
-        }
+        // update the preview with the new formatting
+        this.trySingleFrame();
     }
     updateGraphColors(formatting) {
         const props = this.graph_props;
         props.fillColor = formatting.fillColor;
         props.lineColor = formatting.lineColor;
-        if(this.previousStamp === undefined) {
-            this.doFrame(0)
-                .then(this.suspendAnimate.bind(this));
-        }
+        this.trySingleFrame();
     }
     /**
      * @param {Window} popout 
