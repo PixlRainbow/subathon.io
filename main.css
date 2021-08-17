@@ -15,7 +15,7 @@ body > fieldset input[type=number]{
 input#logsize {
     font-size: initial;
 }
-header, fieldset, section#log {
+header, fieldset, section#log, form {
     font-family: sans-serif;
 }
 fieldset {
@@ -99,7 +99,7 @@ fieldset:first-of-type div {
     visibility: hidden;
     position: absolute;
 }
-.format-box label span {
+.format-box .toggleBox span {
     border: 1px solid rgba(0, 0, 0, 0.3);
     display: inline-block;
     padding: 0.1em;
@@ -114,6 +114,17 @@ fieldset:first-of-type div {
 }
 .format-box :checked + span {
     background: white;
+}
+/* graph color editor */
+.canvas-wrapper:hover > .format-box {
+    opacity: 0.5;
+}
+.canvas-wrapper > .format-box:hover {
+    opacity: 1;
+}
+.format-box label:not(.toggleBox) {
+    display: inline-block;
+    width: max-content;
 }
 
 /* shrink font for mobile screens so that the timer fits in one line */

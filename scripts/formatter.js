@@ -10,6 +10,11 @@ class FormatBox {
         this.container = d3.select(containerName);
         this.form = this.container.append('form')
             .on('submit', this.handleSubmitBtn.bind(this));
+        this.inputs = {};
+        this.onFormatChange = (formatting) => {};
+        this.render();
+    }
+    render() {
         const form = this.form;
         this.inputs = {
             fontFamily: form.append('input')
@@ -39,7 +44,6 @@ class FormatBox {
                 .attr('type', 'submit')
                 .style('visibility','hidden')
         };
-        this.onFormatChange = (formatting) => {};
     }
     /**
      * 
@@ -77,5 +81,38 @@ class FormatBox {
             formatting[pair[0]] = pair[1];
         }
         this.onFormatChange(formatting);
+    }
+}
+
+class CanvasFormat extends FormatBox {
+    /**
+     * @param {string | HTMLElement} containerName 
+     */
+    constructor(containerName) {
+        super(containerName);
+    }
+    render() {
+        const form = this.form;
+        let lineLbl = form.append('label');
+        lineLbl.append('span')
+            .text('Line Color ');
+        let fillLbl = form.append('label');
+        fillLbl.append('span')
+            .text('Fill Color ');
+        this.inputs = {
+            lineColorBtn: lineLbl.append('input')
+                .attr('type', 'color')
+                .attr('name', 'lineColor')
+                .attr('value', '#3585ff')
+                .on('change', this.artificialSubmit.bind(this)),
+            fillColorBtn: fillLbl.append('input')
+                .attr('type', 'color')
+                .attr('name', 'fillColor')
+                .attr('value', '#50aaff')
+                .on('change', this.artificialSubmit.bind(this)),
+            confirmBtn: form.append('input')
+                .attr('type', 'submit')
+                .style('display','none')
+        };
     }
 }

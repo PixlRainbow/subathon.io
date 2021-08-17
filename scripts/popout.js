@@ -42,6 +42,15 @@ class SubGraph {
             .attr('class', 'canvas-plot');
         /** @type {CanvasRenderingContext2D} */
         this.context = this.canvasChart.node().getContext('2d');
+        // canvas options
+        this.canvasOptions = new CanvasFormat(
+            this.chartWrapper.append('div')
+                .attr('class', 'format-box')
+                .style('top', '0')
+                .style('text-align', 'right')
+                .node()
+        );
+        this.canvasOptions.onFormatChange = this.updateGraphColors.bind(this);
 
         // text bounding box highlight
         this.textBoundHL = this.chartWrapper.append('div')
@@ -259,6 +268,15 @@ class SubGraph {
         props.fontColor = formatting.color;
         if(this.previousStamp === undefined) {
             // if animation is not currently running, update the preview with the new formatting
+            this.doFrame(0)
+                .then(this.suspendAnimate.bind(this));
+        }
+    }
+    updateGraphColors(formatting) {
+        const props = this.graph_props;
+        props.fillColor = formatting.fillColor;
+        props.lineColor = formatting.lineColor;
+        if(this.previousStamp === undefined) {
             this.doFrame(0)
                 .then(this.suspendAnimate.bind(this));
         }
